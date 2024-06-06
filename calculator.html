@@ -1,0 +1,263 @@
+<!doctype html>
+<html ⚡4email data-css-strict>
+<head>
+  <meta charset="utf-8">
+  <script async src="https://cdn.ampproject.org/v0.js"></script>
+  
+  <style amp4email-boilerplate>body{visibility:hidden}</style>
+  <script async custom-element="amp-bind" src="https://cdn.ampproject.org/v0/amp-bind-0.1.js"></script>
+
+  <style amp-custom>
+    body {
+      width: auto;
+      margin: 0;
+      padding: 0;
+    }
+
+    #calculator-container {
+      position: relative;
+      padding: 20px 0;
+      width: 300px;
+      margin-left: auto;
+      margin-right: auto;
+      overflow: hidden;
+      text-align: center;
+      border-radius: 10px;
+    }
+
+    #calculator-input {
+      width:84%;
+      margin:5px;
+      font-size: 30px;
+      text-align: right;
+      border-radius: 10px;
+      padding:5px;
+    }
+
+    .calculator-buttons {
+      width: 20%;
+      height: 50px;
+      border-radius: 5px;
+      font-size: 21px;
+      margin: 4px 2px;
+      background-color: WhiteSmoke;
+      padding:0;
+      border: 1px solid LightGray;
+      cursor: pointer;
+    }
+
+    .calculator-reset {
+      width: 89%;
+      height: 40px;
+      border-radius: 5px;
+      font-size: 12px;
+      margin: 4px 2px;
+      background-color: DimGray;
+      padding:0;
+      border: 1px solid LightGray;
+      cursor: pointer;
+      color: white;
+    }
+
+    .calculator-operators {
+      background-color: Gainsboro;
+    }
+
+    .calculator-equal {
+      background-color: lightskyblue;
+      border: 1px solid deepskyblue;
+    }
+
+    .decimal-off {
+      opacity: 0.5
+    }
+
+    .display {
+      /* display: none; */
+      width:84%;
+      text-align: right;
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+      font-size: 12px;
+      padding: 0 20px;
+      margin: 0;
+      overflow: hidden;
+      color: orange;
+    }
+
+  </style>
+</head>
+<body>
+    
+    <div id="calculator-container">
+      
+      <amp-state id="calc">
+        <script type="application/json">
+        {
+          "current": 1,
+          "operator": "",
+          "operand1": "",
+          "operand2": "",
+          "result": 0
+        }
+        </script>
+      </amp-state>
+
+      <amp-bind-macro 
+        id="calculate" 
+        arguments="a, op, b" 
+        expression="
+          op == '+' ? (a * 1) + (b * 1) :
+          op == '-' ? a - b :
+          op == '*' ? a * b :
+          op == '/' ? a / b : 0">
+      </amp-bind-macro>
+
+      <amp-bind-macro 
+        id="symbol" 
+        arguments="op" 
+        expression="
+          op == '+' ? '+' :
+          op == '-' ? '-' :
+          op == '*' ? '×' :
+          op == '/' ? '÷' : ''">
+      </amp-bind-macro>
+
+      <input id="calculator-input" 
+        placeholder="0" 
+        type="number" 
+        [value]="calc.current != 3 ? calc['operand'+calc.current] : calc.result" 
+        on="input-throttled:AMP.setState({
+          calc: { 
+            ['operand'+calc.current]: event.value
+          }
+        })">
+
+      <div class="display">
+        &nbsp;
+        <span [text]="calc.operand1"></span>
+        <span [text]="symbol(calc.operator)"></span>
+        <span [text]="calc.operand2"></span>
+      </div>
+
+      <!-- BUTTONS -->
+      <button class="calculator-buttons"
+        on="tap:AMP.setState({ 
+          calc: { ['operand'+calc.current]: calc['operand'+calc.current] + '7' }
+        })">7
+      </button>
+      <button class="calculator-buttons"
+        on="tap:AMP.setState({ 
+          calc: { ['operand'+calc.current]: calc['operand'+calc.current] + '8' }
+        })">8
+      </button>
+      <button class="calculator-buttons"
+        on="tap:AMP.setState({ 
+          calc: { ['operand'+calc.current]: calc['operand'+calc.current] + '9' }
+        })">9
+      </button>
+      <button class="calculator-buttons calculator-operators"
+        on="tap:AMP.setState({
+          calc: { 
+            operator: '/', 
+            current: 2, 
+            operand2: '',
+            operand1: calc.current == 3 ? calc.result : calc.operand1
+          }
+      })">÷</button>
+
+      <button class="calculator-buttons"
+        on="tap:AMP.setState({ 
+          calc: { ['operand'+calc.current]: calc['operand'+calc.current] + '4' }
+        })">4
+      </button>
+      <button class="calculator-buttons"
+        on="tap:AMP.setState({ 
+          calc: { ['operand'+calc.current]: calc['operand'+calc.current] + '5' }
+        })">5
+      </button>
+      <button class="calculator-buttons"
+        on="tap:AMP.setState({ 
+          calc: { ['operand'+calc.current]: calc['operand'+calc.current] + '6' }
+        })">6
+      </button>
+      <button class="calculator-buttons calculator-operators"
+        on="tap:AMP.setState({
+          calc: { 
+            operator: '*', 
+            current: 2, 
+            operand2: '',
+            operand1: calc.current == 3 ? calc.result : calc.operand1
+          }
+      })">×</button>
+
+      <button class="calculator-buttons"
+        on="tap:AMP.setState({ 
+          calc: { ['operand'+calc.current]: calc['operand'+calc.current] + '1' }
+        })">1
+      </button>
+      <button class="calculator-buttons"
+        on="tap:AMP.setState({ 
+          calc: { ['operand'+calc.current]: calc['operand'+calc.current] + '2' }
+        })">2
+      </button>
+      <button class="calculator-buttons"
+        on="tap:AMP.setState({ 
+          calc: { ['operand'+calc.current]: calc['operand'+calc.current] + '3' }
+        })">3
+      </button>
+      <button class="calculator-buttons calculator-operators"
+        on="tap:AMP.setState({
+          calc: { 
+            operator: '-', 
+            current: 2, 
+            operand2: '',
+            operand1: calc.current == 3 ? calc.result : calc.operand1
+          }
+      })">−</button>
+
+      <button class="calculator-buttons"
+        on="tap:AMP.setState({ 
+          calc: { ['operand'+calc.current]: calc['operand'+calc.current] + '0' }
+        })">0
+      </button>
+      <button class="calculator-buttons" [class]="calc['operand'+calc.current].indexOf('.') > 0 ? 'calculator-buttons decimal-off' : 'calculator-buttons'"
+        on="tap:AMP.setState({ 
+          calc: { 
+            ['operand'+calc.current]: calc['operand'+calc.current].indexOf('.') > 0 ? calc['operand'+calc.current] : calc['operand'+calc.current] + '.',
+          },
+        })">.
+      </button>
+      <button class="calculator-buttons calculator-equal"
+        on="tap:AMP.setState({
+          calc: { 
+            result: calc.current == 3 ? calculate(calc.result, calc.operator, calc.operand2) : calculate(calc.operand1, calc.operator, calc.operand2),
+            operand1: calc.current == 3 ? calc.result : calc.operand1,
+            current: 3,
+          }
+      })">=</button>
+      <button class="calculator-buttons calculator-operators"
+        on="tap:AMP.setState({
+          calc: { 
+            operator: '+', 
+            current: 2, 
+            operand2: '',
+            operand1: calc.current == 3 ? calc.result : calc.operand1,
+          }
+      })">+</button>
+
+      <button class="calculator-reset"
+        on="tap:AMP.setState({
+          calc: { 
+            current: 1,
+            operator:'', 
+            operand1:'',
+            operand2:'',
+            result:'',
+            decimal: true
+          }
+      })">RESET</button>
+
+    </div>
+
+</body>
+</html>
